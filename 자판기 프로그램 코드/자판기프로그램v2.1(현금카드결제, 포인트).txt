@@ -1,0 +1,201 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+
+#define AMERICANO_HOT_PRICE 1500
+#define AMERICANO_ICE_PRICE 2000
+#define LATTE_HOT_PRICE 2500
+#define LATTE_ICE_PRICE 3000
+#define COLA_PRICE 1500
+#define ICETEA_PRICE 3000
+#define ADMIN_PASSWORD 1234
+#define MAX_PASSWORD_ATTEMPTS 3
+#define POINTS_PERCENTAGE 0.05
+
+int main() {
+
+    int choice;
+    int quantity;
+    int totalSales = 0;
+    int cashSales = 0;
+    int cardSales = 0;
+    int dailySales = 0;
+    int passwordAttempts = 0;
+    double points = 0;
+
+    /* 판매된 제품의 수량 확인 변수 */
+    int americanoHotQuantity = 0;
+    int americanoIceQuantity = 0;
+    int latteHotQuantity = 0;
+    int latteIceQuantity = 0;
+    int colaQuantity = 0;
+    int iceTeaQuantity = 0;
+
+    while (1) {
+        printf("\n");
+        printf("◇ 자판기 프로그램 v2.0 ◇\n");
+        printf("1. 아메리카노\n");
+        printf("2. 카페라떼\n");
+        printf("3. 콜라\n");
+        printf("4. 아이스티\n");
+        printf("5. 결제\n");
+        printf("6. 관리자 (매출 확인)\n");
+        printf("7. 종료\n\n");
+
+        printf("메뉴를 선택하세요 : ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+        case 1:
+            printf("1. HOT(%d원) 2. ICE(%d원) 선택하세요: ", AMERICANO_HOT_PRICE, AMERICANO_ICE_PRICE);
+            scanf("%d", &choice);
+
+            if (choice == 1 || choice == 2) {
+                printf("수량을 입력하세요 : ");
+                scanf("%d", &quantity);
+                totalSales += (choice == 1) ? AMERICANO_HOT_PRICE * quantity : AMERICANO_ICE_PRICE * quantity;
+                if (choice == 1) {
+                    americanoHotQuantity += quantity;
+                }
+                else {
+                    americanoIceQuantity += quantity;
+                }
+
+                points += totalSales * POINTS_PERCENTAGE;
+
+                printf("주문이 완료되었습니다.\n");
+            }
+            else {
+                printf("잘못된 선택입니다. 다시 선택하세요.\n");
+            }
+            break;
+
+        case 2:
+            printf("1. HOT(%d원) 2. ICE(%d원) 선택하세요: ", LATTE_HOT_PRICE, LATTE_ICE_PRICE);
+            scanf("%d", &choice);
+
+            if (choice == 1 || choice == 2) {
+                printf("수량을 입력하세요 : ");
+                scanf("%d", &quantity);
+                totalSales += (choice == 1) ? LATTE_HOT_PRICE * quantity : LATTE_ICE_PRICE * quantity;
+                if (choice == 1) {
+                    latteHotQuantity += quantity;
+                }
+                else {
+                    latteIceQuantity += quantity;
+                }
+
+                points += totalSales * POINTS_PERCENTAGE;
+
+                printf("주문이 완료되었습니다.\n");
+            }
+            else {
+                printf("잘못된 선택입니다. 다시 선택하세요.\n");
+            }
+            break;
+
+        case 3:
+            printf("수량을 입력하세요: ");
+            scanf("%d", &quantity);
+            totalSales += COLA_PRICE * quantity;
+            colaQuantity += quantity;
+
+            points += totalSales * POINTS_PERCENTAGE;
+
+            printf("주문이 완료되었습니다.\n");
+            break;
+
+        case 4:
+            printf("수량을 입력하세요: ");
+            scanf("%d", &quantity);
+            totalSales += ICETEA_PRICE * quantity;
+            iceTeaQuantity += quantity;
+
+            points += totalSales * POINTS_PERCENTAGE;
+
+            printf("주문이 완료되었습니다.\n");
+            break;
+
+        case 5:
+            if (totalSales == 0) {
+                printf("주문된 제품이 없습니다. 주문을 먼저 진행하세요\n");
+            }
+            else {
+                int payment;
+                int paymentType;
+                printf("총금액 : %d원입니다.\n", totalSales);
+                printf("보유 포인트: %.2lf원\n", points);
+                printf("결제를 도와드리겠습니다. 결제하실 금액을 입력하세요 : ");
+                scanf("%d", &payment);
+
+                printf("결제 방법을 선택하세요 (1. 현금 / 2. 카드) : ");
+                scanf("%d", &paymentType);
+
+                if (payment < totalSales) {
+                    printf("금액이 부족합니다. 결제를 취소합니다.\n");
+                }
+                else {
+                    int change;
+                    change = payment - totalSales;
+                    printf("거스름돈 : %d원\n", change);
+
+                  
+                    if (points >= totalSales) {
+                        printf("포인트로 결제합니다.\n");
+                        points -= totalSales;
+                    }
+                    else {
+                        printf("포인트로 결제할 수 있는 금액이 부족합니다.\n");
+                    }
+
+                   
+                    if (paymentType == 1) {
+                        cashSales += totalSales;
+                    }
+                    else if (paymentType == 2) {
+                        cardSales += totalSales;
+                    }
+
+                    printf("결제가 완료되었습니다.\n");
+                    dailySales += totalSales;
+                    totalSales = 0;
+                }
+            }
+            break;
+
+        case 6:
+        {
+            int enteredPassword;
+            printf("암호를 입력하세요: ");
+            scanf("%d", &enteredPassword);
+
+            if (enteredPassword == ADMIN_PASSWORD) {
+                printf("아메리카노(HOT) %d개 / %d원\n", americanoHotQuantity, americanoHotQuantity * AMERICANO_HOT_PRICE);
+                printf("아메리카노(ICE) %d개 / %d원\n", americanoIceQuantity, americanoIceQuantity * AMERICANO_ICE_PRICE);
+                printf("카페라떼(HOT) %d개 / %d원\n", latteHotQuantity, latteHotQuantity * LATTE_HOT_PRICE);
+                printf("카페라떼(ICE) %d개 / %d원\n", latteIceQuantity, latteIceQuantity * LATTE_ICE_PRICE);
+                printf("콜라 %d개 / %d원\n", colaQuantity, colaQuantity * COLA_PRICE);
+                printf("아이스티 %d개 / %d원\n", iceTeaQuantity, iceTeaQuantity * ICETEA_PRICE);
+                printf("총 매출액: %d원\n", dailySales);
+                printf("보유 포인트: %.2lf원\n", points);
+                printf("현금 매출액: %d원\n", cashSales);
+                printf("카드 매출액: %d원\n", cardSales);
+            }
+            else {
+                printf("잘못된 선택입니다. 다시 선택하세요.\n");
+            }
+            break;
+        }
+
+        
+        case 7:
+            printf("프로그램을 종료합니다.\n");
+            return 0;
+
+        default:
+            printf("잘못된 선택입니다. 다시 선택하세요.\n");
+            break;
+        }
+    }
+
+    return 0;
+}
