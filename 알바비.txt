@@ -1,0 +1,24 @@
+def calculate_salary():
+    try:
+        # 근로자의 일일 근무 시간과 시간당 임금 입력 받기
+        hours_worked = float(input("일일 근무 시간을 입력하세요: "))
+        hourly_wage = float(input("시간당 임금을 입력하세요: "))
+
+        # 근로자의 급여 계산
+        total_salary = hours_worked * hourly_wage
+
+        # 근로 시간에 따른 추가 보너스 계산
+        if hours_worked > 8:
+            overtime_hours = hours_worked - 8
+            overtime_bonus = overtime_hours * (hourly_wage * 0.5)  # 시간당 임금의 50% 추가
+            total_salary += overtime_bonus
+            print(f"추가 근무 보너스 {overtime_bonus}원이 지급되었습니다.")
+
+        # 결과 출력
+        print(f"근로자의 총 급여는 {total_salary}원입니다.")
+
+    except ValueError:
+        print("올바른 숫자를 입력하세요.")
+
+# 함수 호출
+calculate_salary()
